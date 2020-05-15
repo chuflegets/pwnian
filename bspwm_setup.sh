@@ -19,18 +19,40 @@ function install_from_git () {
     rm -rf $PWD/$package
 }
 
-if [[ $# == 1 ]]
-then
+if [[ $# != 1 ]]; then
+    print_usage
+    exit 1
+else
+    # 1. Upgrade system repositories and install bspwm dependencies
     sudo -S -k apt-get update -y < $password
     sudo -S -k apt-get install ${bspwm_deps[@]} -y < $password
     sudo -S -k apt-get install ${install_utils[@]} -y < $password
-    install_from_git $bspwm_repo
-    install_from_git $sxhkd_repo
-    mkdir -p ~/.config/{bspwm,sxhkd}
-    cp /usr/local/share/doc/bspwm/examples/bspwmrc $HOME/.config/bspwm/
-    cp /usr/local/share/doc/bspwm/examples/sxhkdrc $HOME/.config/sxhkd/
-    chmod u+x $HOME/.config/bspwm/bspwmrc
-else
-    print_usage
-    exit 1
+
+    # 2. Install bspwm and sxhkd
+    bspwm -v &> /dev/null
+    if [[ $? != 0 ]]; then
+        install_from_git $bspwm_repo
+        install_from_git $sxhkd_repo
+        mkdir -p ~/.config/{bspwm,sxhkd}
+        cp /usr/local/share/doc/bspwm/examples/bspwmrc $HOME/.config/bspwm/
+        cp /usr/local/share/doc/bspwm/examples/sxhkdrc $HOME/.config/sxhkd/
+        chmod u+x $HOME/.config/bspwm/bspwmrc
+    fi
+
+    # 3. Run bspwm on X startup
+    if [[ ! -e $HOME/.xinitrc ]]; then
+        cp $PWD/.xinitrc $HOME/.xinitrc
+    fi
+
+    # 4. Install compton
+    compton -h &> /dev/null
+    if [[ $? != 0 ]]; then
+        sudo -S -k apt-get install compton -y < $password
+    fi
+
+    # 5. Install feh
+    feh -v &> /dev/null
+    if [[ $? != 0 ]]; then
+        sudo -S -k apt-get install feh -y < $password
+    fi
 fi
