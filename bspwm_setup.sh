@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+pwnian_dir=$PWD
 password=$(readlink -f $1)
 num_threads=$(nproc --all)
 install_utils=(vim git)
@@ -14,9 +15,9 @@ function install_from_git () {
     local repo_url=$1
     local package=$(echo $repo_url | cut -d'/' -f5 | cut -d'.' -f1)
     git clone $repo_url
-    cd $PWD/$package && make -j$num_threads && sudo -S -k make install < $password
-    cd $OLDPWD
-    rm -rf $PWD/$package
+    cd $pwnian_dir/$package && make -j$num_threads && sudo -S -k make install < $password
+    cd $pwnian_dir
+    rm -rf $pwnian_dir/$package
 }
 
 if [[ $# != 1 ]]; then
@@ -34,14 +35,15 @@ else
         install_from_git $bspwm_repo
         install_from_git $sxhkd_repo
         mkdir -p ~/.config/{bspwm,sxhkd}
-        cp /usr/local/share/doc/bspwm/examples/bspwmrc $HOME/.config/bspwm/
-        cp /usr/local/share/doc/bspwm/examples/sxhkdrc $HOME/.config/sxhkd/
+        cp $pwnian_dir/config/bspwm/bspwmrc $HOME/.config/bspwm/
+        cp -R $pwnian_dir/config/bspwm/scripts $HOME/.config/bspwm
+        cp $pwnian_dir/config/sxhkd/sxhkdrc $HOME/.config/sxhkd/
         chmod u+x $HOME/.config/bspwm/bspwmrc
     fi
 
     # 3. Run bspwm on X startup
     if [[ ! -e $HOME/.xinitrc ]]; then
-        cp $PWD/.xinitrc $HOME/.xinitrc
+        cp $pwnian_dir/.xinitrc $HOME/.xinitrc
     fi
 
     # 4. Install compton
@@ -54,5 +56,11 @@ else
     feh -v &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install feh -y < $password
+    fi
+
+    # 6. Install rofi
+    rofi -h &> /dev/null
+    if [[ $? != 0 ]]; then
+        sudo -S -k apt-get install rofi -y < $password
     fi
 fi

@@ -1,12 +1,13 @@
 #!/usr/bin/bash
-VBOXGA_MOUNT=/media/cdrom
+vboxga_mount=/media/cdrom0
+vboxga_dir=/tmp/vboxga
 apt-get update -y
-apt-get upgrade -y 
-apt-get install build-essential vim git linux-headers-$(uname -r) -y
-if [[ ! -e $VBOXGA_MOUNT ]]; then
-    mkdir $VBOXGA_MOUNT
-    mount /dev/cdrom $VBOXGA_MOUNT
+apt-get install build-essential linux-headers-$(uname -r) -y
+if [[ ! -e $vboxga_mount ]]; then
+    echo "You need to insert the Guest Additions CD before continuing. Aborting..."
+    exit 1
 fi
-$VBOXGA_MOUNT/VBoxLinuxAdditions.run
-umount $VBOXGA_MOUNT && rm -rf $VBOXGA_MOUNT
+cp -R $vboxga_mount $vboxga_dir
+$vboxga_dir/VBoxLinuxAdditions.run
+rm -rf $vboxga_dir
 reboot
