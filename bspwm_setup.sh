@@ -2,7 +2,6 @@
 pwnian_dir=$PWD
 password=$(readlink -f $1)
 num_threads=$(nproc --all)
-install_utils=(vim git)
 bspwm_deps=(libxcb-xinerama0-dev libxcb-icccm4-dev libxcb-randr0-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-keysyms1-dev libxcb-shape0-dev)
 bspwm_repo=https://github.com/baskerville/bspwm.git
 sxhkd_repo=https://github.com/baskerville/sxhkd.git
@@ -27,11 +26,11 @@ else
     # 1. Upgrade system repositories and install bspwm dependencies
     sudo -S -k apt-get update -y < $password
     sudo -S -k apt-get install ${bspwm_deps[@]} -y < $password
-    sudo -S -k apt-get install ${install_utils[@]} -y < $password
 
     # 2. Install bspwm and sxhkd
     bspwm -v &> /dev/null
     if [[ $? != 0 ]]; then
+        sudo -S -k apt-get install bspwm -y < $password
         install_from_git $bspwm_repo
         install_from_git $sxhkd_repo
         mkdir -p ~/.config/{bspwm,sxhkd}
@@ -50,12 +49,14 @@ else
     compton -h &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install compton -y < $password
+        cp -R $pwnian_dir/compton $HOME/.config
     fi
 
     # 5. Install feh
     feh -v &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install feh -y < $password
+        cp $pwnian_dir/wallpapers/red_scuba.jpg $HOME/Pictures
     fi
 
     # 6. Install rofi
