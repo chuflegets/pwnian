@@ -3,6 +3,8 @@ pwnian_dir=$PWD
 password=$(readlink -f $1)
 num_threads=$(nproc --all)
 bspwm_deps=(libxcb-xinerama0-dev libxcb-icccm4-dev libxcb-randr0-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-keysyms1-dev libxcb-shape0-dev)
+polybar_deps=(build-essential git cmake cmake-data pkg-config python3-sphinx libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev)
+polybar_optional_deps=(libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev libasound2-dev libpulse-dev i3-wm libjsoncpp-dev libmpdclient-dev libcurl4-openssl-dev libnl-genl-3-dev)
 bspwm_repo=https://github.com/baskerville/bspwm.git
 sxhkd_repo=https://github.com/baskerville/sxhkd.git
 
@@ -63,5 +65,12 @@ else
     rofi -h &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install rofi -y < $password
+    fi
+
+    # 7. Install polybar
+    polybar -h &> /dev/null
+    if [[ $? != 0 ]]; then
+        sudo -S -k apt-get install ${polybar_deps[@]} -y < $password
+        sudo -S -k apt-get install ${polybar_optional_deps[@]} -y < $password
     fi
 fi
