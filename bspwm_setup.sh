@@ -25,7 +25,10 @@ function install_from_git () {
 function install_bspwm () {
     bspwm -v &> /dev/null
     if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install bspwm sxhkd -y < $password
+        sudo -S -k apt-get install ${bspwm_deps[@]} -y < $password
+        install_from_git $bspwm_repo
+        install_from_git $sxhkd_repo
+        #sudo -S -k apt-get install bspwm sxhkd -y < $password
         mkdir -p ~/.config/{bspwm,sxhkd}
         cp -R $pwnian_dir/config/bspwm/scripts $HOME/.config/bspwm
         cp $pwnian_dir/config/bspwm/bspwmrc.tpl $HOME/.config/bspwm/bspwmrc
@@ -56,12 +59,9 @@ if [[ $# != 1 ]]; then
 else
     # 1. Upgrade system repositories and install bspwm dependencies
     sudo -S -k apt-get update -y < $password
-    sudo -S -k apt-get install ${bspwm_deps[@]} -y < $password
     cp $pwnian_dir/.vimrc $HOME/
 
     # 2. Install bspwm and sxhkd
-    #install_from_git $bspwm_repo
-    #install_from_git $sxhkd_repo
     install_bspwm
 
     # 3. Run bspwm on X startup
