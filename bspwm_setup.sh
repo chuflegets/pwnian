@@ -25,14 +25,14 @@ function install_from_git () {
 function install_bspwm () {
     bspwm -v &> /dev/null
     if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install bspwm sxhdk -y < $password
+        sudo -S -k apt-get install bspwm sxhkd -y < $password
         mkdir -p ~/.config/{bspwm,sxhkd}
         cp -R $pwnian_dir/config/bspwm/scripts $HOME/.config/bspwm
         cp $pwnian_dir/config/bspwm/bspwmrc.tpl $HOME/.config/bspwm/bspwmrc
-        sed -i "s#%HOME%#${HOME}#g" $pwnian_dir/config/bspwm/bspwmrc
+        sed -i "s#%HOME%#${HOME}#g" $HOME/.config/bspwm/bspwmrc
         chmod u+x $HOME/.config/bspwm/bspwmrc
         cp $pwnian_dir/config/sxhkd/sxhkdrc.tpl $HOME/.config/sxhkd/sxhkdrc
-        sed -i "s#%HOME%#${HOME}#g" $pwnian_dir/config/sxhkd/sxhkdrc
+        sed -i "s#%HOME%#${HOME}#g" $HOME/.config/sxhkd/sxhkdrc
     fi
 }
 
