@@ -4,6 +4,7 @@ sxhkd &
 compton --config %HOME%/.config/compton/compton.conf &
 wmname LG3D &
 feh --bg-fill %HOME%/Pictures/sakura.jpg &
+~/.config/polybar/launch.sh &
 
 bspc config pointer_modifier mod1
 

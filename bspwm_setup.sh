@@ -59,6 +59,7 @@ function install_polybar () {
         cd $polybar_dir && mkdir build && cd $polybar_dir/build
         cmake .. && make -j$num_threads && sudo -S -k make install < $password
         cd $pwnian_dir && rm -rf $polybar_dir
+        cp -R $pwnian_dir/config/polybar ~/.config
     fi
 }
 
