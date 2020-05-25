@@ -1,9 +1,9 @@
-#! /bin/sh
+#!/bin/sh
 
 sxhkd &
-compton --config /home/k0rtuz/.config/compton/compton.conf &
+compton --config %HOME%/.config/compton/compton.conf &
 wmname LG3D &
-feh --bg-fill /home/k0rtuz/Pictures/sakura.jpg &
+feh --bg-fill %HOME%/Pictures/sakura.jpg &
 
 bspc config pointer_modifier mod1
 
