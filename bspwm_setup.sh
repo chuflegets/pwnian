@@ -29,7 +29,6 @@ function install_bspwm () {
         install_from_git $bspwm_repo
         install_from_git $sxhkd_repo
         sudo -S -k cp /usr/local/share/xsessions/bspwm.desktop /usr/share/xsessions/ < $password
-        #sudo -S -k apt-get install bspwm sxhkd -y < $password
         mkdir -p ~/.config/{bspwm,sxhkd}
         cp -R $pwnian_dir/config/bspwm/scripts $HOME/.config/bspwm
         cp $pwnian_dir/config/bspwm/bspwmrc.tpl $HOME/.config/bspwm/bspwmrc
@@ -66,15 +65,15 @@ else
     install_bspwm
 
     # 3. Run bspwm on X startup
-    if [[ ! -e $HOME/.xinitrc ]]; then
-        cp $pwnian_dir/.xinitrc $HOME/.xinitrc
-    fi
+    #if [[ ! -e $HOME/.xinitrc ]]; then
+        #cp $pwnian_dir/.xinitrc $HOME/.xinitrc
+    #fi
 
     # 4. Install compton
     compton -h &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install compton -y < $password
-        cp -R $pwnian_dir/compton $HOME/.config
+        cp -R $pwnian_dir/config/compton $HOME/.config
     fi
 
     # 5. Install feh
