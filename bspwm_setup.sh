@@ -44,6 +44,20 @@ function install_sxhkd () {
     fi
 }
 
+function install_polybar () {
+    polybar -h &> /dev/null
+    if [[ $? != 0 ]]; then
+        sudo -S -k apt-get install ${polybar_deps[@]} -y < $password
+        sudo -S -k apt-get install ${polybar_optional_deps[@]} -y < $password
+        polybar_tar=$pwnian_dir/$(echo $polybar_release | awk -F / '{ print $NF }')
+        polybar_dir=$pwnian_dir/$(echo polybar_tar | cut -d'-' -f1)
+        wget $polybar_release && tar xf $polybar_tar && rm -rf $polybar_tar
+        cd $polybar_dir && mkdir build && cd $polybar_dir/build
+        cmake .. && make -j$num_threads && sudo -S -k make install < $password
+        cd $pwnian_dir && rm -rf $polybar_dir
+    fi
+}
+
 if [[ $# != 1 ]]; then
     print_usage
     exit 1
@@ -75,7 +89,7 @@ else
     feh -v &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install feh -y < $password
-        cp $pwnian_dir/wallpapers/red_scuba.jpg $HOME/Pictures
+        cp $pwnian_dir/wallpapers/sakura.jpg $HOME/Pictures
     fi
 
     # 6. Install rofi
@@ -85,15 +99,4 @@ else
     fi
 
     # 7. Install polybar
-    polybar -h &> /dev/null
-    if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install ${polybar_deps[@]} -y < $password
-        sudo -S -k apt-get install ${polybar_optional_deps[@]} -y < $password
-        polybar_tar=$pwnian_dir/$(echo $polybar_release | awk -F / '{ print $NF }')
-        polybar_dir=$pwnian_dir/$(echo polybar_tar | cut -d'-' -f1)
-        wget $polybar_release && tar xf $polybar_tar && rm -rf $polybar_tar
-        cd $polybar_dir && mkdir build && cd $polybar_dir/build
-        cmake .. && make -j$num_threads && sudo -S -k make install < $password
-        cd $pwnian_dir && rm -rf $polybar_dir
-    fi
 fi
