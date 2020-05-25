@@ -64,30 +64,25 @@ else
     # 2. Install bspwm and sxhkd
     install_bspwm
 
-    # 3. Run bspwm on X startup
-    #if [[ ! -e $HOME/.xinitrc ]]; then
-        #cp $pwnian_dir/.xinitrc $HOME/.xinitrc
-    #fi
-
-    # 4. Install compton
+    # 3. Install compton
     compton -h &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install compton -y < $password
         cp -R $pwnian_dir/config/compton $HOME/.config
     fi
 
-    # 5. Install feh
+    # 4. Install feh
     feh -v &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install feh -y < $password
         cp $pwnian_dir/wallpapers/sakura.jpg $HOME/Pictures
     fi
 
-    # 6. Install rofi
+    # 5. Install rofi
     rofi -h &> /dev/null
     if [[ $? != 0 ]]; then
         sudo -S -k apt-get install rofi -y < $password
     fi
 
-    # 7. Install polybar
+    # 6. Install polybar
 fi
