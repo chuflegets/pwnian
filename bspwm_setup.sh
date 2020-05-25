@@ -28,6 +28,7 @@ function install_bspwm () {
         sudo -S -k apt-get install ${bspwm_deps[@]} -y < $password
         install_from_git $bspwm_repo
         install_from_git $sxhkd_repo
+        sudo -S -k cp /usr/local/share/xsessions/bspwm.desktop /usr/share/xsessions/ < $password
         #sudo -S -k apt-get install bspwm sxhkd -y < $password
         mkdir -p ~/.config/{bspwm,sxhkd}
         cp -R $pwnian_dir/config/bspwm/scripts $HOME/.config/bspwm
