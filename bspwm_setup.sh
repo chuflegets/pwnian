@@ -6,7 +6,8 @@ bspwm_deps=(libxcb-xinerama0-dev libxcb-icccm4-dev libxcb-randr0-dev libxcb-util
 polybar_deps=(build-essential git cmake cmake-data pkg-config python3-sphinx libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev)
 polybar_optional_deps=(libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev libasound2-dev libpulse-dev libnl-genl-3-dev)
 bspwm_repo=https://github.com/baskerville/bspwm.git
-polybar_release=https://github.com/polybar/polybar/releases/download/3.4.0/polybar-3.4.0.tar
+polybar_release=https://github.com/polybar/polybar/releases/download/3.4.3/polybar-3.4.3.tar
+python3_xcbgen_deb=http://ftp.debian.org/debian/pool/main/x/xcb-proto/python3-xcbgen_1.14-2_all.deb
 sxhkd_repo=https://github.com/baskerville/sxhkd.git
 
 function print_usage () {
@@ -42,8 +43,16 @@ function install_bspwm () {
 function install_polybar () {
     polybar -h &> /dev/null
     if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install "${polybar_deps[@]}" -y < $password
-        sudo -S -k apt-get install "${polybar_optional_deps[@]}" -y < $password
+        for dep in "${polybar_deps[@]}"; do
+            sudo -S -k apt-get install $dep -y < $password
+        done
+        for dep in "${polybar_optional_deps[@]}"; do
+            sudo -S -k apt-get install $dep -y < $password
+        done
+        wget $python3_xcbgen_deb
+        python3_xcbgen_pkg=$pwnian_dir/$(echo $python3_xcbgen_deb | awk -F / '{ print $NF }')
+        sudo -S -k dpkg -i $python3_xcbgen_pkg < $password
+        rm -rf $pwnian_dir/${python3_xcbgen_pkg}*
         polybar_tar=$pwnian_dir/$(echo $polybar_release | awk -F / '{ print $NF }')
         polybar_dir=$pwnian_dir/polybar
         wget $polybar_release && tar xf $polybar_tar && rm -rf $polybar_tar
