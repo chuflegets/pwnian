@@ -42,10 +42,10 @@ function install_bspwm () {
 function install_polybar () {
     polybar -h &> /dev/null
     if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install ${polybar_deps[@]} -y < $password
-        sudo -S -k apt-get install ${polybar_optional_deps[@]} -y < $password
+        sudo -S -k apt-get install "${polybar_deps[@]}" -y < $password
+        sudo -S -k apt-get install "${polybar_optional_deps[@]}" -y < $password
         polybar_tar=$pwnian_dir/$(echo $polybar_release | awk -F / '{ print $NF }')
-        polybar_dir=$pwnian_dir/$(echo polybar_tar | cut -d'-' -f1)
+        polybar_dir=$pwnian_dir/polybar
         wget $polybar_release && tar xf $polybar_tar && rm -rf $polybar_tar
         cd $polybar_dir && mkdir build && cd $polybar_dir/build
         cmake .. && make -j$num_threads && sudo -S -k make install < $password
@@ -85,4 +85,5 @@ else
     fi
 
     # 6. Install polybar
+    install_polybar
 fi
