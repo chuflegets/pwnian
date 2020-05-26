@@ -51,13 +51,13 @@ padding-right = 2
 module-margin-left = 1
 module-margin-right = 2
 
-font-0 = @FONT_FIXED@;1
-font-1 = @FONT_UNIFONT@:size=8:antialias=false;0
-font-2 = @FONT_SIJI@;1
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
+font-2 = siji:pixelsize=10;1
 
-modules-left = @MODULES_LEFT@
-modules-center = @MODULES_CENTER@
-modules-right = @MODULES_RIGHT@
+modules-left = bspwm
+modules-center = 
+modules-right = filesystem xbacklight alsa pulseaudio xkeyboard memory cpu wlan eth battery temperature date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -220,7 +220,7 @@ label = %percentage_used%%
 
 [module/wlan]
 type = internal/network
-interface = @INTERFACE_WLAN@
+interface = net1
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
@@ -242,7 +242,7 @@ ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/eth]
 type = internal/network
-interface = @INTERFACE_ETH@
+interface = enp0s3
 interval = 3.0
 
 format-connected-underline = #55aa55
@@ -329,8 +329,8 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 
 [module/battery]
 type = internal/battery
-battery = @BATTERY@
-adapter = @ADAPTER@
+battery = BAT0
+adapter = AC
 full-at = 98
 
 format-charging = <animation-charging> <label-charging>

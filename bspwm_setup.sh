@@ -3,6 +3,7 @@ pwnian_dir=$PWD
 password=$(readlink -f $1)
 num_threads=$(nproc --all)
 bspwm_deps=(libxcb-xinerama0-dev libxcb-icccm4-dev libxcb-randr0-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-keysyms1-dev libxcb-shape0-dev)
+hack_nerd_fonts=https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
 polybar_deps=(build-essential git cmake cmake-data pkg-config python3-sphinx libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev)
 polybar_optional_deps=(libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev libasound2-dev libpulse-dev libnl-genl-3-dev)
 bspwm_repo=https://github.com/baskerville/bspwm.git
@@ -40,6 +41,18 @@ function install_bspwm () {
     fi
 }
 
+function install_fonts () {
+    sudo -S -k wget $hack_nerd_fonts -O /usr/local/share/fonts/Hack.zip < $password
+    sudo -S -k unzip /usr/local/share/fonts/Hack.zip -d /usr/local/share/fonts < $password && \
+        sudo -S -k rm -rf /usr/local/share/fonts/Hack.zip
+}
+
+function install_python3_xcbgen {
+    wget $python3_xcbgen_deb
+    python3_xcbgen_pkg=$pwnian_dir/$(echo $python3_xcbgen_deb | awk -F / '{ print $NF }')
+    sudo -S -k dpkg -i $python3_xcbgen_pkg < $password && rm -rf ${python3_xcbgen_pkg}*
+}
+
 function install_polybar () {
     polybar -h &> /dev/null
     if [[ $? != 0 ]]; then
@@ -49,10 +62,7 @@ function install_polybar () {
         for dep in "${polybar_optional_deps[@]}"; do
             sudo -S -k apt-get install $dep -y < $password
         done
-        wget $python3_xcbgen_deb
-        python3_xcbgen_pkg=$pwnian_dir/$(echo $python3_xcbgen_deb | awk -F / '{ print $NF }')
-        sudo -S -k dpkg -i $python3_xcbgen_pkg < $password
-        rm -rf $pwnian_dir/${python3_xcbgen_pkg}*
+        install_python3_xcbgen
         polybar_tar=$pwnian_dir/$(echo $polybar_release | awk -F / '{ print $NF }')
         polybar_dir=$pwnian_dir/polybar
         wget $polybar_release && tar xf $polybar_tar && rm -rf $polybar_tar
@@ -96,4 +106,7 @@ else
 
     # 6. Install polybar
     install_polybar
+
+    # 7. Install fonts
+    install_fonts
 fi
