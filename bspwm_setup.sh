@@ -8,6 +8,7 @@ polybar_deps=(build-essential git cmake cmake-data pkg-config python3-sphinx lib
 polybar_optional_deps=(libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev libasound2-dev libpulse-dev libnl-genl-3-dev)
 bspwm_repo=https://github.com/baskerville/bspwm.git
 polybar_release=https://github.com/polybar/polybar/releases/download/3.4.3/polybar-3.4.3.tar
+powerlevel10k_repo=https://github.com/romkatv/powerlevel10k.git
 python3_xcbgen_deb=http://ftp.debian.org/debian/pool/main/x/xcb-proto/python3-xcbgen_1.14-2_all.deb
 sxhkd_repo=https://github.com/baskerville/sxhkd.git
 
@@ -78,8 +79,8 @@ function install_polybar () {
 
 function install_zsh () {
     sudo -S -k apt-get install zsh -y < $password
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-    echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
+    git clone --depth=1 $powerlevel10k_repo ~/.config/powerlevel10k
+    echo 'source ~/.config/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
 }
 
 if [[ $# != 1 ]]; then
