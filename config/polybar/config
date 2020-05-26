@@ -58,7 +58,7 @@ font-3 = Hack Nerd Font Mono:pixelsize=15;2
 
 modules-left = bspwm
 modules-center = xwindow
-modules-right = memory cpu wlan ethernet battery date
+modules-right = memory cpu wlan vpn ethernet battery date
 
 tray-position = right
 tray-padding = 2
@@ -431,3 +431,8 @@ margin-bottom = 5
 type = custom/script
 interval = 2
 exec = ~/.config/bin/ethernet_status.sh
+
+[module/vpn]
+type = custom/script
+interval = 2
+exec = ~/.config/bin/vpn_status.sh
