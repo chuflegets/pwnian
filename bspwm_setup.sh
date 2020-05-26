@@ -44,7 +44,7 @@ function install_bspwm () {
 function install_fonts () {
     sudo -S -k wget $hack_nerd_fonts -O /usr/local/share/fonts/Hack.zip < $password
     sudo -S -k unzip /usr/local/share/fonts/Hack.zip -d /usr/local/share/fonts < $password && \
-        sudo -S -k rm -rf /usr/local/share/fonts/Hack.zip
+        sudo -S -k rm -rf /usr/local/share/fonts/Hack.zip < $password
 }
 
 function install_python3_xcbgen {
@@ -70,6 +70,7 @@ function install_polybar () {
         cmake .. && make -j$num_threads && sudo -S -k make install < $password
         cd $pwnian_dir && rm -rf $polybar_dir
         cp -R $pwnian_dir/config/polybar ~/.config
+        cp -R $pwnian_dir/config/bin ~/.config
     fi
 }
 
