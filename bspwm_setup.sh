@@ -42,9 +42,11 @@ function install_bspwm () {
 }
 
 function install_fonts () {
-    sudo -S -k wget $hack_nerd_fonts -O /usr/local/share/fonts/Hack.zip < $password
-    sudo -S -k unzip /usr/local/share/fonts/Hack.zip -d /usr/local/share/fonts < $password && \
-        sudo -S -k rm -rf /usr/local/share/fonts/Hack.zip < $password
+    if [[ ! "$(ls -A /usr/local/share/fonts )" ]]; then
+        sudo -S -k wget $hack_nerd_fonts -O /usr/local/share/fonts/Hack.zip < $password
+        sudo -S -k unzip /usr/local/share/fonts/Hack.zip -d /usr/local/share/fonts < $password && \
+            sudo -S -k rm -rf /usr/local/share/fonts/Hack.zip < $password
+    fi
 }
 
 function install_python3_xcbgen {
@@ -72,6 +74,12 @@ function install_polybar () {
         cp -R $pwnian_dir/config/polybar ~/.config
         cp -R $pwnian_dir/config/bin ~/.config
     fi
+}
+
+function install_zsh () {
+    sudo -S -k apt-get install zsh -y < $password
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+    echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
 }
 
 if [[ $# != 1 ]]; then
@@ -110,4 +118,7 @@ else
 
     # 7. Install fonts
     install_fonts
+
+    # 8. Install zsh
+    install_zsh
 fi
