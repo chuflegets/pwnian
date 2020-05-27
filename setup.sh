@@ -2,9 +2,11 @@
 pwnian_dir=$PWD
 password=$(readlink -f $1)
 num_threads=$(nproc --all)
+bat_url=https://github.com/sharkdp/bat/releases/download/v0.15.4/bat_0.15.4_amd64.deb
 bspwm_deps=(libxcb-xinerama0-dev libxcb-icccm4-dev libxcb-randr0-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-keysyms1-dev libxcb-shape0-dev)
 fonts_dir=/usr/local/share/fonts
 fonts_url=https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+lsd_url=https://github.com/Peltoche/lsd/releases/download/0.17.0/lsd_0.17.0_amd64.deb
 polybar_deps=(build-essential git cmake cmake-data pkg-config python3-sphinx libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev)
 polybar_optional_deps=(libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev libasound2-dev libpulse-dev libnl-genl-3-dev)
 bspwm_repo=https://github.com/baskerville/bspwm.git
@@ -85,8 +87,8 @@ function install_polybar () {
 
 function install_zsh () {
     sudo -S -k apt-get install zsh -y < $password
+
     git clone --depth=1 $powerlevel10k_repo ~/.config/powerlevel10k
-    #echo 'source ~/.config/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
     cp $pwnian_dir/.zshrc ~
     cp $pwnian_dir/.p10k.zsh ~
     sudo -S -k usermod --shell /usr/bin/zsh $USER < $password
@@ -97,45 +99,74 @@ function install_zsh () {
     sudo -S -k usermod --shell /usr/bin/zsh root < $password
 }
 
+function install_lsd () {
+    lsd -v &> /dev/null
+    if [[ $? != 0 ]]; then
+        local lsd_deb=$pwnian_dir/$(echo $lsd_url | rev | cut -d'/' -f1 | rev)
+        wget $lsd_url -O $lsd_deb && \
+        sudo -S -k dpkg -i $lsd_deb < $password && \
+        rm -rf ${lsd_deb}*
+    fi
+}
+
+function install_bat () {
+    bat -v &> /dev/null
+    if [[ $? != 0 ]]; then
+        local bat_deb=$pwnian_dir/$(echo $bat_url | rev | cut -d'/' -f1 | rev)
+        wget $bat_url -O $bat_deb && \
+        sudo -S -k dpkg -i $bat_deb < $password && \
+        rm -rf ${bat_deb}*
+    fi
+}
+
+function install_utils () {
+    sudo -S -k apt-get install scrub -y < $password
+    install_lsd
+    install_bat
+}
+
 if [[ $# != 1 ]]; then
     print_usage
     exit 1
-else
-    # 1. Upgrade system repositories and install bspwm dependencies
-    sudo -S -k apt-get update -y < $password
-    cp $pwnian_dir/.vimrc $HOME/
-
-    # 2. Install bspwm and sxhkd
-    install_bspwm
-
-    # 3. Install compton
-    compton -h &> /dev/null
-    if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install compton -y < $password
-        cp -R $pwnian_dir/config/compton $HOME/.config
-    fi
-
-    # 4. Install feh
-    feh -v &> /dev/null
-    if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install feh -y < $password
-        cp $pwnian_dir/wallpapers/sakura.jpg $HOME/Pictures
-    fi
-
-    # 5. Install rofi
-    rofi -h &> /dev/null
-    if [[ $? != 0 ]]; then
-        sudo -S -k apt-get install rofi -y < $password
-    fi
-
-    # 6. Install polybar
-    install_polybar
-
-    # 7. Install fonts
-    install_fonts
-
-    # 8. Install zsh
-    install_zsh
-
-    mate-session-save --force-logout
 fi
+
+# 1. Upgrade system repositories and install bspwm dependencies
+sudo -S -k apt-get update -y < $password
+cp $pwnian_dir/.vimrc $HOME/
+
+# 2. Install bspwm and sxhkd
+install_bspwm
+
+# 3. Install compton
+compton -h &> /dev/null
+if [[ $? != 0 ]]; then
+    sudo -S -k apt-get install compton -y < $password
+    cp -R $pwnian_dir/config/compton $HOME/.config
+fi
+
+# 4. Install feh
+feh -v &> /dev/null
+if [[ $? != 0 ]]; then
+    sudo -S -k apt-get install feh -y < $password
+    cp $pwnian_dir/wallpapers/sakura.jpg $HOME/Pictures
+fi
+
+# 5. Install rofi
+rofi -h &> /dev/null
+if [[ $? != 0 ]]; then
+    sudo -S -k apt-get install rofi -y < $password
+fi
+
+# 6. Install polybar
+install_polybar
+
+# 7. Install fonts
+install_fonts
+
+# 8. Install zsh
+install_zsh
+
+# 9. Install utils
+install_utils
+
+mate-session-save --force-logout
