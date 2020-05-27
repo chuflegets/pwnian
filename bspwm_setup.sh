@@ -86,7 +86,13 @@ function install_polybar () {
 function install_zsh () {
     sudo -S -k apt-get install zsh -y < $password
     git clone --depth=1 $powerlevel10k_repo ~/.config/powerlevel10k
-    echo 'source ~/.config/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
+    #echo 'source ~/.config/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
+    cp $pwnian_dir/.zshrc ~
+    cp -R $pwnian_dir/config/powerlevel10k/p10k.zsh ~/.config/powerlevel10k/
+
+    sudo -S -k git clone --depth=1 $powerlevel10k_repo /root/.config/powerlevel10k < $password
+    sudo -S -k cp $pwnian_dir/.zshrc /root/ < $password
+    sudo -S -k cp -R $pwnian_dir/config/powerlevel10k/p10k.zsh /root/.config/powerlevel10k/ < $password
 }
 
 if [[ $# != 1 ]]; then
