@@ -49,6 +49,10 @@ function install_fonts () {
         sudo -S -k wget $fonts_url -O $fonts_zip < $password && \
         sudo -S -k unzip $fonts_zip -d $fonts_dir < $password && \
         sudo -S -k rm -rf $fonts_zip < $password
+
+        sudo -S -k apt-get install dconf-cli -y < $password
+        dconf write /org/mate/terminal/profiles/default/use-system-font false
+        dconf write /org/mate/terminal/profiles/default/font 'Hack Nerd Font Mono 12'
     fi
 }
 
