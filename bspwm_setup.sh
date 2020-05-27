@@ -52,7 +52,7 @@ function install_fonts () {
 
         sudo -S -k apt-get install dconf-cli -y < $password
         dconf write /org/mate/terminal/profiles/default/use-system-font false
-        dconf write /org/mate/terminal/profiles/default/font 'Hack Nerd Font Mono 12'
+        dconf write /org/mate/terminal/profiles/default/font "'Hack Nerd Font Mono 12'"
     fi
 }
 
@@ -128,4 +128,6 @@ else
 
     # 8. Install zsh
     install_zsh
+
+    mate-session-save --force-logout
 fi
