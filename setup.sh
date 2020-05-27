@@ -89,10 +89,12 @@ function install_zsh () {
     #echo 'source ~/.config/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
     cp $pwnian_dir/.zshrc ~
     cp $pwnian_dir/.p10k.zsh ~
+    sudo -S -k usermod --shell /usr/bin/zsh $USER < $password
 
     sudo -S -k git clone --depth=1 $powerlevel10k_repo /root/.config/powerlevel10k < $password
     sudo -S -k cp $pwnian_dir/.zshrc /root/ < $password
     sudo -S -k cp $pwnian_dir/.p10k.zsh /root/ < $password
+    sudo -S -k usermod --shell /usr/bin/zsh root < $password
 }
 
 if [[ $# != 1 ]]; then
